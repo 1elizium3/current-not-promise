@@ -47,7 +47,28 @@ inputRub.addEventListener('input', (e) => {
 
 });
 
+inputUsd.addEventListener('input', (e) => {
+    if (isNaN(e.target.value)) {
+        inputRub.value = "Введите число";
+        return false;
+    };
+    
+    let request = new XMLHttpRequest();
 
+    request.open('GET', 'current.json');
+    request.setRequestHeader('Countent-type', 'application/json; charset=utf-8');
+    request.send();
+
+    request.addEventListener('readystatechange', () => {
+        if (request.readyState === 4 && request.status == 200) {
+            let data = JSON.parse(request.response);
+
+            inputRub.value = (inputUsd.value * data.usd).toFixed(3);
+        } else {
+            inputRub.value = "Произошла ошибка!";
+        }
+    });
+});
 
 // method - это метод по которому общается клиент с сервером. Чаще всего используются
 // это GET (при помощи которого можно Получить данные сервера) 
